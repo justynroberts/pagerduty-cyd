@@ -497,7 +497,7 @@ static void buildOverview() {
     // Two smaller tappable cards below the logo
     int cardW = 100, cardH = 90, gap = 16;
     int x0 = (SCREEN_WIDTH - 2*cardW - gap) / 2;
-    int y0 = 110;
+    int y0 = 100;
 
     // OPEN — red, tap → incidents filtered to triggered
     lv_obj_t* c_open = makeStat(s, COL_OPEN, "OPEN", x0, y0, cardW, cardH);
@@ -534,7 +534,7 @@ static void buildOverview() {
     lv_obj_set_style_text_color(lbl_overview_status, COL_MUT, 0);
     lv_obj_set_style_text_font(lbl_overview_status, &outfit_bold_12, 0);
     lv_obj_set_style_text_letter_space(lbl_overview_status, 2, 0);
-    lv_obj_align(lbl_overview_status, LV_ALIGN_BOTTOM_MID, 0, -14);
+    lv_obj_align(lbl_overview_status, LV_ALIGN_BOTTOM_MID, 0, -28);
 }
 
 static void onFilterChip(lv_event_t* e) {
