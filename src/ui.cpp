@@ -160,7 +160,6 @@ static void addStatusBar(lv_obj_t* parent, int rotIdx) {
     lv_obj_set_style_radius(home, 4, 0);
     lv_obj_t* hi = lv_label_create(home);
     lv_label_set_text(hi, LV_SYMBOL_HOME);
-    lv_obj_set_style_text_font(hi, &lv_font_montserrat_14, 0);
     lv_obj_set_style_text_color(hi, COL_PD_GREEN, 0);
     lv_obj_set_style_text_font(hi, &outfit_bold_14, 0);
     lv_obj_center(hi);
@@ -486,7 +485,6 @@ static void buildOverview() {
     lv_obj_set_style_radius(infoBtn, 6, 0);
     lv_obj_t* iL = lv_label_create(infoBtn);
     lv_label_set_text(iL, LV_SYMBOL_SETTINGS);
-    lv_obj_set_style_text_font(iL, &lv_font_montserrat_14, 0);
     lv_obj_set_style_text_color(iL, COL_PD_GREEN, 0);
     lv_obj_set_style_text_font(iL, &outfit_bold_14, 0);
     lv_obj_center(iL);
@@ -683,7 +681,6 @@ static void buildInfo() {
     lv_obj_set_style_radius(back, 5, 0);
     lv_obj_t* bl = lv_label_create(back);
     lv_label_set_text(bl, LV_SYMBOL_LEFT " BACK");
-    lv_obj_set_style_text_font(bl, &lv_font_montserrat_14, 0);
     lv_obj_set_style_text_font(bl, &outfit_bold_12, 0);
     lv_obj_set_style_text_color(bl, lv_color_hex(0x062), 0);
     lv_obj_center(bl);

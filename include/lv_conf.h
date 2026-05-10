@@ -31,7 +31,7 @@
 #define LV_FONT_MONTSERRAT_8  0
 #define LV_FONT_MONTSERRAT_10 0
 #define LV_FONT_MONTSERRAT_12 0
-#define LV_FONT_MONTSERRAT_14 1   // kept as default fallback for theme widgets
+#define LV_FONT_MONTSERRAT_14 0
 #define LV_FONT_MONTSERRAT_16 0
 #define LV_FONT_MONTSERRAT_18 0
 #define LV_FONT_MONTSERRAT_20 0
@@ -43,7 +43,8 @@
 #define LV_FONT_MONTSERRAT_40 0
 #define LV_FONT_MONTSERRAT_48 0
 
-#define LV_FONT_DEFAULT &lv_font_montserrat_14
+#define LV_FONT_CUSTOM_DECLARE LV_FONT_DECLARE(outfit_bold_14)
+#define LV_FONT_DEFAULT &outfit_bold_14
 
 #define LV_USE_FONT_COMPRESSED 0
 #define LV_USE_FONT_SUBPX 0
