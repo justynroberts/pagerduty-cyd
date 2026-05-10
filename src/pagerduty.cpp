@@ -136,12 +136,9 @@ bool validateToken(const String& token) {
 
 bool updateIncidentStatus(const String& incidentId, const String& newStatus, String& err) {
     if (WiFi.status() != WL_CONNECTED) { err = "no WiFi"; return false; }
+    // User tokens (u+...) carry the user identity, so From: is only needed for
+    // account-level tokens. Send From: when we have an email; let PD decide.
     String email = storage::getEmail();
-    if (email.length() == 0) {
-        err = "no From email; set it on the token page";
-        return false;
-    }
-
     String url = apiBase() + "/incidents/" + incidentId;
     Serial.printf("[pd] PUT %s status=%s\n", url.c_str(), newStatus.c_str());
 
@@ -160,7 +157,7 @@ bool updateIncidentStatus(const String& incidentId, const String& newStatus, Str
     http.addHeader("Authorization", "Token token=" + storage::getToken());
     http.addHeader("Accept", "application/vnd.pagerduty+json;version=2");
     http.addHeader("Content-Type", "application/json");
-    http.addHeader("From", email);
+    if (email.length()) http.addHeader("From", email);
     http.addHeader("Connection", "close");
 
     String body = String("{\"incident\":{\"type\":\"incident_reference\",\"status\":\"") + newStatus + "\"}}";
