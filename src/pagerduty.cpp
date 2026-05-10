@@ -134,13 +134,29 @@ bool validateToken(const String& token) {
     String e; return validateTokenVerbose(token, e);
 }
 
+static int doUpdateIncidentStatus(const String& url, const String& email,
+                                  const String& body, String& err);
+
 bool updateIncidentStatus(const String& incidentId, const String& newStatus, String& err) {
     if (WiFi.status() != WL_CONNECTED) { err = "no WiFi"; return false; }
-    // User tokens (u+...) carry the user identity, so From: is only needed for
-    // account-level tokens. Send From: when we have an email; let PD decide.
     String email = storage::getEmail();
     String url = apiBase() + "/incidents/" + incidentId;
-    Serial.printf("[pd] PUT %s status=%s\n", url.c_str(), newStatus.c_str());
+    String body = String("{\"incident\":{\"type\":\"incident_reference\",\"status\":\"") + newStatus + "\"}}";
+
+    // Try once, retry up to twice on transient TLS/connect errors (-1, -5, -11).
+    for (int attempt = 0; attempt < 3; ++attempt) {
+        if (attempt > 0) { Serial.printf("[pd] PUT retry %d (%s)\n", attempt, err.c_str()); delay(600); }
+        err = "";
+        int code = doUpdateIncidentStatus(url, email, body, err);
+        if (code == 200) return true;
+        if (code != -1 && code != -5 && code != -11) break;   // permanent error, no retry
+    }
+    return false;
+}
+
+static int doUpdateIncidentStatus(const String& url, const String& email,
+                                  const String& body, String& err) {
+    Serial.printf("[pd] PUT %s\n", url.c_str());
 
     WiFiClientSecure client;
     client.setInsecure();
@@ -153,14 +169,13 @@ bool updateIncidentStatus(const String& incidentId, const String& newStatus, Str
     http.setConnectTimeout(15000);
     http.setUserAgent("pagerduty-cyd/1.0");
 
-    if (!http.begin(client, url)) { err = "http begin failed"; return false; }
+    if (!http.begin(client, url)) { err = "http begin failed"; return -2; }
     http.addHeader("Authorization", "Token token=" + storage::getToken());
     http.addHeader("Accept", "application/vnd.pagerduty+json;version=2");
     http.addHeader("Content-Type", "application/json");
     if (email.length()) http.addHeader("From", email);
     http.addHeader("Connection", "close");
 
-    String body = String("{\"incident\":{\"type\":\"incident_reference\",\"status\":\"") + newStatus + "\"}}";
     int code = http.PUT(body);
     if (code != 200) {
         String resp = http.getString();
@@ -170,7 +185,7 @@ bool updateIncidentStatus(const String& incidentId, const String& newStatus, Str
         Serial.printf("[pd] PUT failed: %s\n", err.c_str());
     }
     http.end();
-    return code == 200;
+    return code;
 }
 
 bool snoozeIncident(const String& incidentId, int durationSeconds, String& err) {
