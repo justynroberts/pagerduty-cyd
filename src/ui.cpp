@@ -159,7 +159,8 @@ static void addStatusBar(lv_obj_t* parent, int rotIdx) {
     lv_obj_set_style_border_width(home, 0, 0);
     lv_obj_set_style_radius(home, 4, 0);
     lv_obj_t* hi = lv_label_create(home);
-    lv_label_set_text(hi, "HOME");
+    lv_label_set_text(hi, LV_SYMBOL_HOME);
+    lv_obj_set_style_text_font(hi, &lv_font_montserrat_14, 0);
     lv_obj_set_style_text_color(hi, COL_PD_GREEN, 0);
     lv_obj_set_style_text_font(hi, &outfit_bold_14, 0);
     lv_obj_center(hi);
@@ -484,7 +485,8 @@ static void buildOverview() {
     lv_obj_set_style_border_width(infoBtn, 1, 0);
     lv_obj_set_style_radius(infoBtn, 6, 0);
     lv_obj_t* iL = lv_label_create(infoBtn);
-    lv_label_set_text(iL, "INFO");
+    lv_label_set_text(iL, LV_SYMBOL_SETTINGS);
+    lv_obj_set_style_text_font(iL, &lv_font_montserrat_14, 0);
     lv_obj_set_style_text_color(iL, COL_PD_GREEN, 0);
     lv_obj_set_style_text_font(iL, &outfit_bold_14, 0);
     lv_obj_center(iL);
@@ -609,6 +611,7 @@ static void buildIncidents() {
     lv_obj_set_style_border_width(incidents_list, 0, 0);
     lv_obj_set_style_pad_all(incidents_list, 2, 0);
     lv_obj_set_scrollbar_mode(incidents_list, LV_SCROLLBAR_MODE_ACTIVE);
+    lv_obj_set_scroll_dir(incidents_list, LV_DIR_VER);
     lv_obj_add_flag(incidents_list, LV_OBJ_FLAG_GESTURE_BUBBLE);
 
     lbl_incidents_empty = lv_label_create(s);
@@ -631,6 +634,7 @@ static void buildServices() {
     lv_obj_set_style_border_width(services_list, 0, 0);
     lv_obj_set_style_pad_all(services_list, 2, 0);
     lv_obj_set_scrollbar_mode(services_list, LV_SCROLLBAR_MODE_ACTIVE);
+    lv_obj_set_scroll_dir(services_list, LV_DIR_VER);
     lv_obj_add_flag(services_list, LV_OBJ_FLAG_GESTURE_BUBBLE);
 }
 
@@ -646,6 +650,7 @@ static void buildOnCall() {
     lv_obj_set_style_border_width(oncall_list, 0, 0);
     lv_obj_set_style_pad_all(oncall_list, 2, 0);
     lv_obj_set_scrollbar_mode(oncall_list, LV_SCROLLBAR_MODE_ACTIVE);
+    lv_obj_set_scroll_dir(oncall_list, LV_DIR_VER);
     lv_obj_add_flag(oncall_list, LV_OBJ_FLAG_GESTURE_BUBBLE);
 }
 
@@ -677,7 +682,8 @@ static void buildInfo() {
     lv_obj_set_style_border_width(back, 0, 0);
     lv_obj_set_style_radius(back, 5, 0);
     lv_obj_t* bl = lv_label_create(back);
-    lv_label_set_text(bl, "BACK");
+    lv_label_set_text(bl, LV_SYMBOL_LEFT " BACK");
+    lv_obj_set_style_text_font(bl, &lv_font_montserrat_14, 0);
     lv_obj_set_style_text_font(bl, &outfit_bold_12, 0);
     lv_obj_set_style_text_color(bl, lv_color_hex(0x062), 0);
     lv_obj_center(bl);
@@ -1199,6 +1205,7 @@ static void buildIncidentDetail(const pd::Incident& inc) {
     lv_obj_set_flex_align(detail_timeline_list, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_START);
     lv_obj_set_scrollbar_mode(detail_timeline_list, LV_SCROLLBAR_MODE_ACTIVE);
     // Let swipe gestures bubble up to scr_detail so the user can swipe-back
+    lv_obj_set_scroll_dir(detail_timeline_list, LV_DIR_VER);
     lv_obj_add_flag(detail_timeline_list, LV_OBJ_FLAG_GESTURE_BUBBLE);
 
     // Loading placeholder inside the list
@@ -1237,7 +1244,7 @@ static void buildIncidentDetail(const pd::Incident& inc) {
     int btnW = (SCREEN_WIDTH - 12 - gap) / 2;
     int x0 = 6;
 
-    makeAction("BACK", COL_PD_GREEN, x0, btnW, onDetailBack, true);
+    makeAction(LV_SYMBOL_LEFT " BACK", COL_PD_GREEN, x0, btnW, onDetailBack, true);
 
     bool canAck = (inc.status == "triggered");
     btn_ack = makeAction("ACK", COL_ACK, x0 + btnW + gap, btnW,
