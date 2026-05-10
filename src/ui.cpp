@@ -159,7 +159,7 @@ static void addStatusBar(lv_obj_t* parent, int rotIdx) {
     lv_obj_set_style_border_width(home, 0, 0);
     lv_obj_set_style_radius(home, 4, 0);
     lv_obj_t* hi = lv_label_create(home);
-    lv_label_set_text(hi, LV_SYMBOL_HOME);
+    lv_label_set_text(hi, "HOME");
     lv_obj_set_style_text_color(hi, COL_PD_GREEN, 0);
     lv_obj_set_style_text_font(hi, &outfit_bold_14, 0);
     lv_obj_center(hi);
@@ -484,7 +484,7 @@ static void buildOverview() {
     lv_obj_set_style_border_width(infoBtn, 1, 0);
     lv_obj_set_style_radius(infoBtn, 6, 0);
     lv_obj_t* iL = lv_label_create(infoBtn);
-    lv_label_set_text(iL, LV_SYMBOL_SETTINGS);
+    lv_label_set_text(iL, "INFO");
     lv_obj_set_style_text_color(iL, COL_PD_GREEN, 0);
     lv_obj_set_style_text_font(iL, &outfit_bold_14, 0);
     lv_obj_center(iL);
@@ -677,7 +677,7 @@ static void buildInfo() {
     lv_obj_set_style_border_width(back, 0, 0);
     lv_obj_set_style_radius(back, 5, 0);
     lv_obj_t* bl = lv_label_create(back);
-    lv_label_set_text(bl, LV_SYMBOL_LEFT " BACK");
+    lv_label_set_text(bl, "BACK");
     lv_obj_set_style_text_font(bl, &outfit_bold_12, 0);
     lv_obj_set_style_text_color(bl, lv_color_hex(0x062), 0);
     lv_obj_center(bl);
@@ -1177,7 +1177,7 @@ static void buildIncidentDetail(const pd::Incident& inc) {
     lv_label_set_text(metaLbl, meta.c_str());
     lv_obj_set_style_text_color(metaLbl, COL_MUT, 0);
     lv_obj_set_style_text_font(metaLbl, &outfit_bold_12, 0);
-    lv_obj_set_pos(metaLbl, 8, 76);
+    lv_obj_set_pos(metaLbl, 8, 90);
 
     // TIMELINE section header
     lv_obj_t* tlHdr = lv_label_create(scr_detail);
@@ -1185,12 +1185,12 @@ static void buildIncidentDetail(const pd::Incident& inc) {
     lv_obj_set_style_text_color(tlHdr, COL_PD_GREEN, 0);
     lv_obj_set_style_text_font(tlHdr, &outfit_bold_12, 0);
     lv_obj_set_style_text_letter_space(tlHdr, 3, 0);
-    lv_obj_set_pos(tlHdr, 8, 100);
+    lv_obj_set_pos(tlHdr, 8, 114);
 
     // Timeline list (scrollable) — leaves a 32 px action bar at the bottom
     detail_timeline_list = lv_obj_create(scr_detail);
-    lv_obj_set_size(detail_timeline_list, SCREEN_WIDTH - 16, SCREEN_HEIGHT - 152);
-    lv_obj_set_pos(detail_timeline_list, 8, 118);
+    lv_obj_set_size(detail_timeline_list, SCREEN_WIDTH - 16, SCREEN_HEIGHT - 166);
+    lv_obj_set_pos(detail_timeline_list, 8, 132);
     lv_obj_set_style_bg_color(detail_timeline_list, COL_BG, 0);
     lv_obj_set_style_border_width(detail_timeline_list, 0, 0);
     lv_obj_set_style_pad_all(detail_timeline_list, 2, 0);
@@ -1237,7 +1237,7 @@ static void buildIncidentDetail(const pd::Incident& inc) {
     int btnW = (SCREEN_WIDTH - 12 - gap) / 2;
     int x0 = 6;
 
-    makeAction(LV_SYMBOL_LEFT " BACK", COL_PD_GREEN, x0, btnW, onDetailBack, true);
+    makeAction("BACK", COL_PD_GREEN, x0, btnW, onDetailBack, true);
 
     bool canAck = (inc.status == "triggered");
     btn_ack = makeAction("ACK", COL_ACK, x0 + btnW + gap, btnW,
