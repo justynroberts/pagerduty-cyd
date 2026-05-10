@@ -1,0 +1,7 @@
+.pio/
+.vscode/
+.DS_Store
+*.swp
+*.elf
+*.bin
+tools/fonts/*.ttf
