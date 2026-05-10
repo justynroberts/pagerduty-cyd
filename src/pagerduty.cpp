@@ -216,8 +216,8 @@ bool addNote(const String& incidentId, const String& content, String& err) {
 bool fetchOnCalls(std::vector<OnCall>& out, String& err, int limit) {
     out.clear();
     if (WiFi.status() != WL_CONNECTED) { err = "no WiFi"; return false; }
-    String url = apiBase() + "/oncalls?limit=" + String(limit) +
-                 "&include[]=users&include[]=schedules&include[]=escalation_policies";
+    // No include[] — _reference objects already carry .summary, keeps payload small
+    String url = apiBase() + "/oncalls?limit=" + String(limit);
     WiFiClientSecure client; client.setInsecure(); client.setHandshakeTimeout(20); client.setTimeout(20000);
     HTTPClient http; http.setReuse(false); http.setTimeout(20000); http.setConnectTimeout(15000);
     if (!http.begin(client, url)) { err = "http begin"; return false; }
@@ -228,12 +228,17 @@ bool fetchOnCalls(std::vector<OnCall>& out, String& err, int limit) {
     JsonDocument doc;
     if (deserializeJson(doc, http.getStream())) { err = "json"; http.end(); return false; }
     http.end();
+    int n = doc["oncalls"].as<JsonArray>().size();
+    Serial.printf("[pd] oncalls returned %d entries\n", n);
     for (JsonObject oc : doc["oncalls"].as<JsonArray>()) {
         OnCall e;
         e.user             = oc["user"]["summary"]                | "";
         e.schedule         = oc["schedule"]["summary"]            | "(direct)";
         e.escalationPolicy = oc["escalation_policy"]["summary"]   | "";
         e.level            = oc["escalation_level"]               | 0;
+        Serial.printf("[pd]   L%d %s | EP=%s | sched=%s\n",
+                      e.level, e.user.c_str(), e.escalationPolicy.c_str(),
+                      e.schedule.c_str());
         out.push_back(e);
     }
     return true;
