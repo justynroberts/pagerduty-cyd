@@ -10,6 +10,7 @@
 #include <vector>
 
 #include "assets_gen.h"
+#include "fonts/fonts.h"
 
 // Pick severity badge image for an incident — strictly by status.
 static const lv_img_dsc_t* sevBadge(const pd::Incident& i) {
@@ -160,7 +161,7 @@ static void addStatusBar(lv_obj_t* parent, int rotIdx) {
     lv_obj_t* hi = lv_label_create(home);
     lv_label_set_text(hi, LV_SYMBOL_HOME);
     lv_obj_set_style_text_color(hi, COL_PD_GREEN, 0);
-    lv_obj_set_style_text_font(hi, &lv_font_montserrat_14, 0);
+    lv_obj_set_style_text_font(hi, &outfit_thin_14, 0);
     lv_obj_center(hi);
     lv_obj_add_event_cb(home, [](lv_event_t*){ rotateTo(ROT_OVERVIEW, true); },
                         LV_EVENT_CLICKED, nullptr);
@@ -181,7 +182,7 @@ static void addStatusBar(lv_obj_t* parent, int rotIdx) {
     lv_obj_t* t = lv_label_create(bar);
     lv_label_set_text(t, ROT_TITLE[rotIdx]);
     lv_obj_set_style_text_color(t, COL_INK, 0);
-    lv_obj_set_style_text_font(t, &lv_font_montserrat_12, 0);
+    lv_obj_set_style_text_font(t, &outfit_thin_12, 0);
     lv_obj_set_style_text_letter_space(t, 3, 0);
     lv_obj_align(t, LV_ALIGN_CENTER, 0, 0);
 
@@ -189,7 +190,7 @@ static void addStatusBar(lv_obj_t* parent, int rotIdx) {
     lv_obj_t* s = lv_label_create(bar);
     lv_label_set_text(s, "LIVE");
     lv_obj_set_style_text_color(s, COL_PD_GREEN, 0);
-    lv_obj_set_style_text_font(s, &lv_font_montserrat_12, 0);
+    lv_obj_set_style_text_font(s, &outfit_thin_12, 0);
     lv_obj_set_style_text_letter_space(s, 2, 0);
     lv_obj_align(s, LV_ALIGN_RIGHT_MID, -8, 0);
     if (rotIdx >= 0 && rotIdx < ROT_COUNT) status_label[rotIdx] = s;
@@ -198,7 +199,7 @@ static void addStatusBar(lv_obj_t* parent, int rotIdx) {
     lv_obj_t* cl = lv_label_create(bar);
     lv_label_set_text(cl, "--:--");
     lv_obj_set_style_text_color(cl, COL_MUT, 0);
-    lv_obj_set_style_text_font(cl, &lv_font_montserrat_12, 0);
+    lv_obj_set_style_text_font(cl, &outfit_thin_12, 0);
     lv_obj_align(cl, LV_ALIGN_RIGHT_MID, -42, 0);
     if (rotIdx >= 0 && rotIdx < ROT_COUNT) clock_label[rotIdx] = cl;
 }
@@ -269,7 +270,7 @@ static void simpleHeader(lv_obj_t* parent, const char* title) {
     lv_obj_t* l = lv_label_create(hdr);
     lv_label_set_text(l, title);
     lv_obj_set_style_text_color(l, COL_MUT, 0);
-    lv_obj_set_style_text_font(l, &lv_font_montserrat_12, 0);
+    lv_obj_set_style_text_font(l, &outfit_thin_12, 0);
     lv_obj_set_style_text_letter_space(l, 2, 0);
     lv_obj_align(l, LV_ALIGN_CENTER, 0, 0);
 }
@@ -293,7 +294,7 @@ void ui::showSetupHint(const String& ssid, const String& password, const String&
     lv_obj_t* t = lv_label_create(scr_setup);
     lv_label_set_text(t, "Connect WiFi");
     lv_obj_set_style_text_color(t, COL_PD_GREEN, 0);
-    lv_obj_set_style_text_font(t, &lv_font_montserrat_22, 0);
+    lv_obj_set_style_text_font(t, &outfit_bold_22, 0);
     lv_obj_align(t, LV_ALIGN_TOP_LEFT, 120, 32);
 
     lv_obj_t* sub = lv_label_create(scr_setup);
@@ -301,7 +302,7 @@ void ui::showSetupHint(const String& ssid, const String& password, const String&
     lv_obj_set_width(sub, 190);
     lv_label_set_text(sub, "Join this AP with your phone");
     lv_obj_set_style_text_color(sub, COL_INK, 0);
-    lv_obj_set_style_text_font(sub, &lv_font_montserrat_14, 0);
+    lv_obj_set_style_text_font(sub, &outfit_thin_14, 0);
     lv_obj_align(sub, LV_ALIGN_TOP_LEFT, 120, 60);
 
     lv_obj_t* card = lv_obj_create(scr_setup);
@@ -317,7 +318,7 @@ void ui::showSetupHint(const String& ssid, const String& password, const String&
     lv_obj_t* k1 = lv_label_create(card);
     lv_label_set_text(k1, "SSID");
     lv_obj_set_style_text_color(k1, COL_MUT, 0);
-    lv_obj_set_style_text_font(k1, &lv_font_montserrat_12, 0);
+    lv_obj_set_style_text_font(k1, &outfit_thin_12, 0);
     lv_obj_align(k1, LV_ALIGN_TOP_LEFT, 0, 0);
 
     lv_obj_t* v1 = lv_label_create(card);
@@ -325,13 +326,13 @@ void ui::showSetupHint(const String& ssid, const String& password, const String&
     lv_obj_set_width(v1, SCREEN_WIDTH - 60);
     lv_label_set_text(v1, ssid.c_str());
     lv_obj_set_style_text_color(v1, COL_INK, 0);
-    lv_obj_set_style_text_font(v1, &lv_font_montserrat_18, 0);
+    lv_obj_set_style_text_font(v1, &outfit_bold_18, 0);
     lv_obj_align(v1, LV_ALIGN_TOP_LEFT, 0, 14);
 
     lv_obj_t* k2 = lv_label_create(card);
     lv_label_set_text(k2, "PASSWORD");
     lv_obj_set_style_text_color(k2, COL_MUT, 0);
-    lv_obj_set_style_text_font(k2, &lv_font_montserrat_12, 0);
+    lv_obj_set_style_text_font(k2, &outfit_thin_12, 0);
     lv_obj_align(k2, LV_ALIGN_TOP_LEFT, 0, 44);
 
     lv_obj_t* v2 = lv_label_create(card);
@@ -339,7 +340,7 @@ void ui::showSetupHint(const String& ssid, const String& password, const String&
     lv_obj_set_width(v2, SCREEN_WIDTH - 60);
     lv_label_set_text(v2, password.c_str());
     lv_obj_set_style_text_color(v2, COL_INK, 0);
-    lv_obj_set_style_text_font(v2, &lv_font_montserrat_18, 0);
+    lv_obj_set_style_text_font(v2, &outfit_bold_18, 0);
     lv_obj_align(v2, LV_ALIGN_TOP_LEFT, 0, 58);
 
     lv_obj_t* h = lv_label_create(scr_setup);
@@ -347,7 +348,7 @@ void ui::showSetupHint(const String& ssid, const String& password, const String&
     lv_obj_set_width(h, SCREEN_WIDTH - 24);
     lv_label_set_text(h, help.c_str());
     lv_obj_set_style_text_color(h, COL_INK, 0);
-    lv_obj_set_style_text_font(h, &lv_font_montserrat_14, 0);
+    lv_obj_set_style_text_font(h, &outfit_thin_14, 0);
     lv_obj_set_style_text_align(h, LV_TEXT_ALIGN_CENTER, 0);
     lv_obj_align(h, LV_ALIGN_BOTTOM_MID, 0, -8);
 
@@ -381,7 +382,7 @@ void ui::showConnecting(const String& msg) {
     if (idx >= 0) pretty = pretty.substring(0, (unsigned)(idx + 3)) + "\n" + pretty.substring((unsigned)(idx + 4));
     lv_label_set_text(l, pretty.c_str());
     lv_obj_set_style_text_color(l, COL_INK, 0);
-    lv_obj_set_style_text_font(l, &lv_font_montserrat_16, 0);
+    lv_obj_set_style_text_font(l, &outfit_bold_16, 0);
     lv_obj_set_style_text_align(l, LV_TEXT_ALIGN_CENTER, 0);
     lv_obj_set_style_text_line_space(l, 4, 0);
     lv_obj_align(l, LV_ALIGN_CENTER, 0, 50);
@@ -402,7 +403,7 @@ void ui::showWaitingForToken(const String& portalUrl) {
     lv_obj_t* t = lv_label_create(scr_waiting);
     lv_label_set_text(t, "Open in browser:");
     lv_obj_set_style_text_color(t, COL_INK, 0);
-    lv_obj_set_style_text_font(t, &lv_font_montserrat_14, 0);
+    lv_obj_set_style_text_font(t, &outfit_thin_14, 0);
     lv_obj_align(t, LV_ALIGN_TOP_LEFT, 120, 32);
 
     lv_obj_t* url = lv_label_create(scr_waiting);
@@ -410,7 +411,7 @@ void ui::showWaitingForToken(const String& portalUrl) {
     lv_obj_set_width(url, 190);
     lv_label_set_text(url, portalUrl.c_str());
     lv_obj_set_style_text_color(url, COL_PD_GREEN, 0);
-    lv_obj_set_style_text_font(url, &lv_font_montserrat_18, 0);
+    lv_obj_set_style_text_font(url, &outfit_bold_18, 0);
     lv_obj_set_style_text_line_space(url, 2, 0);
     lv_obj_align(url, LV_ALIGN_TOP_LEFT, 120, 50);
 
@@ -419,7 +420,7 @@ void ui::showWaitingForToken(const String& portalUrl) {
     lv_obj_set_width(h, SCREEN_WIDTH - 24);
     lv_label_set_text(h, "Paste your PagerDuty USER REST API token to begin.\nSame WiFi as this device.");
     lv_obj_set_style_text_color(h, COL_INK, 0);
-    lv_obj_set_style_text_font(h, &lv_font_montserrat_14, 0);
+    lv_obj_set_style_text_font(h, &outfit_thin_14, 0);
     lv_obj_set_style_text_align(h, LV_TEXT_ALIGN_CENTER, 0);
     lv_obj_align(h, LV_ALIGN_BOTTOM_MID, 0, -10);
 
@@ -450,7 +451,7 @@ static lv_obj_t* makeStat(lv_obj_t* parent, lv_color_t accent,
     lv_obj_t* lbl = lv_label_create(c);
     lv_label_set_text(lbl, label);
     lv_obj_set_style_text_color(lbl, accent, 0);
-    lv_obj_set_style_text_font(lbl, &lv_font_montserrat_12, 0);
+    lv_obj_set_style_text_font(lbl, &outfit_thin_12, 0);
     lv_obj_set_style_text_letter_space(lbl, 2, 0);
     lv_obj_align(lbl, LV_ALIGN_TOP_MID, 0, 2);
     return c;
@@ -485,7 +486,7 @@ static void buildOverview() {
     lv_obj_t* iL = lv_label_create(infoBtn);
     lv_label_set_text(iL, LV_SYMBOL_SETTINGS);
     lv_obj_set_style_text_color(iL, COL_PD_GREEN, 0);
-    lv_obj_set_style_text_font(iL, &lv_font_montserrat_14, 0);
+    lv_obj_set_style_text_font(iL, &outfit_thin_14, 0);
     lv_obj_center(iL);
     lv_obj_add_event_cb(infoBtn, [](lv_event_t*){
         if (!scr_info_off) return;
@@ -500,7 +501,7 @@ static void buildOverview() {
 
     // OPEN — red, tap → incidents filtered to triggered
     lv_obj_t* c_open = makeStat(s, COL_OPEN, "OPEN", x0, y0, cardW, cardH);
-    lbl_open = makeBigNumber(c_open, COL_OPEN, &lv_font_montserrat_48);
+    lbl_open = makeBigNumber(c_open, COL_OPEN, &outfit_bold_48);
     lv_obj_add_flag(c_open, LV_OBJ_FLAG_CLICKABLE);
     lv_obj_add_event_cb(c_open, [](lv_event_t*){
         g_filter = FLT_TRIG;
@@ -511,7 +512,7 @@ static void buildOverview() {
 
     // ACK — yellow, tap → incidents filtered to acknowledged
     lv_obj_t* c_ack = makeStat(s, COL_ACK, "ACK", x0 + cardW + gap, y0, cardW, cardH);
-    lbl_ack = makeBigNumber(c_ack, COL_ACK, &lv_font_montserrat_48);
+    lbl_ack = makeBigNumber(c_ack, COL_ACK, &outfit_bold_48);
     lv_obj_add_flag(c_ack, LV_OBJ_FLAG_CLICKABLE);
     lv_obj_add_event_cb(c_ack, [](lv_event_t*){
         g_filter = FLT_ACK;
@@ -531,7 +532,7 @@ static void buildOverview() {
     lbl_overview_status = lv_label_create(s);
     lv_label_set_text(lbl_overview_status, "WAITING FOR DATA");
     lv_obj_set_style_text_color(lbl_overview_status, COL_MUT, 0);
-    lv_obj_set_style_text_font(lbl_overview_status, &lv_font_montserrat_12, 0);
+    lv_obj_set_style_text_font(lbl_overview_status, &outfit_thin_12, 0);
     lv_obj_set_style_text_letter_space(lbl_overview_status, 2, 0);
     lv_obj_align(lbl_overview_status, LV_ALIGN_BOTTOM_MID, 0, -14);
 }
@@ -577,7 +578,7 @@ static void addFilterChip(lv_obj_t* parent, const char* label, int mode, int x) 
     lv_obj_set_style_shadow_width(c, 0, 0);
     lv_obj_t* lb = lv_label_create(c);
     lv_label_set_text(lb, label);
-    lv_obj_set_style_text_font(lb, &lv_font_montserrat_12, 0);
+    lv_obj_set_style_text_font(lb, &outfit_thin_12, 0);
     lv_obj_set_style_text_color(lb, mode == g_filter ? lv_color_hex(0x062) : COL_MUT, 0);
     lv_obj_center(lb);
     lv_obj_add_event_cb(c, onFilterChip, LV_EVENT_CLICKED, (void*)(intptr_t)mode);
@@ -613,7 +614,7 @@ static void buildIncidents() {
     lbl_incidents_empty = lv_label_create(s);
     lv_label_set_text(lbl_incidents_empty, "No open incidents");
     lv_obj_set_style_text_color(lbl_incidents_empty, COL_MUT, 0);
-    lv_obj_set_style_text_font(lbl_incidents_empty, &lv_font_montserrat_14, 0);
+    lv_obj_set_style_text_font(lbl_incidents_empty, &outfit_thin_14, 0);
     lv_obj_align(lbl_incidents_empty, LV_ALIGN_CENTER, 0, 0);
     lv_obj_add_flag(lbl_incidents_empty, LV_OBJ_FLAG_HIDDEN);
 }
@@ -677,7 +678,7 @@ static void buildInfo() {
     lv_obj_set_style_radius(back, 5, 0);
     lv_obj_t* bl = lv_label_create(back);
     lv_label_set_text(bl, LV_SYMBOL_LEFT " BACK");
-    lv_obj_set_style_text_font(bl, &lv_font_montserrat_12, 0);
+    lv_obj_set_style_text_font(bl, &outfit_thin_12, 0);
     lv_obj_set_style_text_color(bl, lv_color_hex(0x062), 0);
     lv_obj_center(bl);
     lv_obj_add_event_cb(back, onInfoBack, LV_EVENT_CLICKED, nullptr);
@@ -685,7 +686,7 @@ static void buildInfo() {
     lv_obj_t* t = lv_label_create(hdr);
     lv_label_set_text(t, "STATUS");
     lv_obj_set_style_text_color(t, COL_INK, 0);
-    lv_obj_set_style_text_font(t, &lv_font_montserrat_12, 0);
+    lv_obj_set_style_text_font(t, &outfit_thin_12, 0);
     lv_obj_set_style_text_letter_space(t, 3, 0);
     lv_obj_align(t, LV_ALIGN_CENTER, 0, 0);
 
@@ -795,7 +796,7 @@ static void rebuildIncidentsList() {
         lv_obj_t* urg = lv_label_create(row);
         lv_label_set_text(urg, (inc.status == "triggered" ? "TRIG" : "ACK"));
         lv_obj_set_style_text_color(urg, accent, 0);
-        lv_obj_set_style_text_font(urg, &lv_font_montserrat_12, 0);
+        lv_obj_set_style_text_font(urg, &outfit_thin_12, 0);
         lv_obj_set_style_text_letter_space(urg, 1, 0);
         lv_obj_align(urg, LV_ALIGN_TOP_RIGHT, 0, 0);
 
@@ -810,7 +811,7 @@ static void rebuildIncidentsList() {
         lv_obj_set_height(title, 18);
         lv_label_set_text(title, prefixed);
         lv_obj_set_style_text_color(title, COL_INK, 0);
-        lv_obj_set_style_text_font(title, &lv_font_montserrat_14, 0);
+        lv_obj_set_style_text_font(title, &outfit_thin_14, 0);
         lv_obj_set_style_pad_top(title, 0, 0);
         lv_obj_set_style_pad_bottom(title, 0, 0);
         lv_obj_set_pos(title, 30, 2);
@@ -823,7 +824,7 @@ static void rebuildIncidentsList() {
         lv_obj_set_height(svc, 16);
         lv_label_set_text(svc, inc.service.length() ? inc.service.c_str() : "—");
         lv_obj_set_style_text_color(svc, COL_MUT, 0);
-        lv_obj_set_style_text_font(svc, &lv_font_montserrat_12, 0);
+        lv_obj_set_style_text_font(svc, &outfit_thin_12, 0);
         lv_obj_set_pos(svc, 30, 32);
     }
 }
@@ -845,7 +846,7 @@ static void rebuildServicesList() {
         lv_obj_t* none = lv_label_create(services_list);
         lv_label_set_text(none, "No services with open incidents");
         lv_obj_set_style_text_color(none, COL_MUT, 0);
-        lv_obj_set_style_text_font(none, &lv_font_montserrat_14, 0);
+        lv_obj_set_style_text_font(none, &outfit_thin_14, 0);
         return;
     }
     // Sort: triggered desc, then acked desc, then name
@@ -900,7 +901,7 @@ static void rebuildServicesList() {
         lv_obj_set_width(name, SCREEN_WIDTH - 130);
         lv_label_set_text(name, kv.first.c_str());
         lv_obj_set_style_text_color(name, COL_INK, 0);
-        lv_obj_set_style_text_font(name, &lv_font_montserrat_14, 0);
+        lv_obj_set_style_text_font(name, &outfit_thin_14, 0);
         lv_obj_align(name, LV_ALIGN_LEFT_MID, 12, 0);
 
         // count pills
@@ -909,7 +910,7 @@ static void rebuildServicesList() {
         lv_obj_t* cnt = lv_label_create(row);
         lv_label_set_text(cnt, buf);
         lv_obj_set_style_text_color(cnt, accent, 0);
-        lv_obj_set_style_text_font(cnt, &lv_font_montserrat_16, 0);
+        lv_obj_set_style_text_font(cnt, &outfit_bold_16, 0);
         lv_obj_align(cnt, LV_ALIGN_RIGHT_MID, -4, 0);
     }
 }
@@ -924,7 +925,7 @@ static void rebuildOnCallList() {
         lv_obj_t* none = lv_label_create(oncall_list);
         lv_label_set_text(none, "No on-call data\n(swipe down to refresh)");
         lv_obj_set_style_text_color(none, COL_MUT, 0);
-        lv_obj_set_style_text_font(none, &lv_font_montserrat_14, 0);
+        lv_obj_set_style_text_font(none, &outfit_thin_14, 0);
         return;
     }
     int rowIdx = 0;
@@ -947,7 +948,7 @@ static void rebuildOnCallList() {
         lv_obj_t* lvl = lv_label_create(row);
         lv_label_set_text(lvl, lv);
         lv_obj_set_style_text_color(lvl, accent, 0);
-        lv_obj_set_style_text_font(lvl, &lv_font_montserrat_18, 0);
+        lv_obj_set_style_text_font(lvl, &outfit_bold_18, 0);
         lv_obj_set_pos(lvl, 0, 12);
 
         // User name
@@ -956,7 +957,7 @@ static void rebuildOnCallList() {
         lv_obj_set_width(user, OC_W - 40);
         lv_label_set_text(user, oc.user.length() ? oc.user.c_str() : "(direct)");
         lv_obj_set_style_text_color(user, COL_INK, 0);
-        lv_obj_set_style_text_font(user, &lv_font_montserrat_14, 0);
+        lv_obj_set_style_text_font(user, &outfit_thin_14, 0);
         lv_obj_set_pos(user, 30, 2);
 
         // Escalation policy + schedule (combined, dimmer second line)
@@ -967,7 +968,7 @@ static void rebuildOnCallList() {
         lv_obj_set_width(sl, OC_W - 40);
         lv_label_set_text(sl, sub.c_str());
         lv_obj_set_style_text_color(sl, COL_MUT, 0);
-        lv_obj_set_style_text_font(sl, &lv_font_montserrat_12, 0);
+        lv_obj_set_style_text_font(sl, &outfit_thin_12, 0);
         lv_obj_set_pos(sl, 30, 24);
     }
 }
@@ -985,7 +986,7 @@ static void addInfoRow(lv_obj_t* parent, const char* k, const String& v, lv_colo
     lv_obj_t* lk = lv_label_create(row);
     lv_label_set_text(lk, k);
     lv_obj_set_style_text_color(lk, COL_MUT, 0);
-    lv_obj_set_style_text_font(lk, &lv_font_montserrat_12, 0);
+    lv_obj_set_style_text_font(lk, &outfit_thin_12, 0);
     lv_obj_set_style_text_letter_space(lk, 1, 0);
     lv_obj_align(lk, LV_ALIGN_LEFT_MID, 4, 0);
 
@@ -994,7 +995,7 @@ static void addInfoRow(lv_obj_t* parent, const char* k, const String& v, lv_colo
     lv_obj_set_width(lv, SCREEN_WIDTH - 110);
     lv_label_set_text(lv, v.c_str());
     lv_obj_set_style_text_color(lv, col, 0);
-    lv_obj_set_style_text_font(lv, &lv_font_montserrat_14, 0);
+    lv_obj_set_style_text_font(lv, &outfit_thin_14, 0);
     lv_obj_align(lv, LV_ALIGN_RIGHT_MID, -4, 0);
 }
 
@@ -1138,7 +1139,7 @@ static void buildIncidentDetail(const pd::Incident& inc) {
     lv_obj_t* tt = lv_label_create(hdr);
     lv_label_set_text(tt, numbuf);
     lv_obj_set_style_text_color(tt, accent, 0);
-    lv_obj_set_style_text_font(tt, &lv_font_montserrat_12, 0);
+    lv_obj_set_style_text_font(tt, &outfit_thin_12, 0);
     lv_obj_set_style_text_letter_space(tt, 2, 0);
     lv_obj_align(tt, LV_ALIGN_CENTER, 0, 0);
 
@@ -1162,7 +1163,7 @@ static void buildIncidentDetail(const pd::Incident& inc) {
     lv_obj_set_width(title, SCREEN_WIDTH - 50);
     lv_label_set_text(title, inc.title.c_str());
     lv_obj_set_style_text_color(title, COL_INK, 0);
-    lv_obj_set_style_text_font(title, &lv_font_montserrat_16, 0);
+    lv_obj_set_style_text_font(title, &outfit_bold_16, 0);
     lv_obj_set_style_text_line_space(title, 1, 0);
     lv_obj_set_pos(title, 8, 36);
 
@@ -1175,14 +1176,14 @@ static void buildIncidentDetail(const pd::Incident& inc) {
     lv_obj_set_width(metaLbl, SCREEN_WIDTH - 16);
     lv_label_set_text(metaLbl, meta.c_str());
     lv_obj_set_style_text_color(metaLbl, COL_MUT, 0);
-    lv_obj_set_style_text_font(metaLbl, &lv_font_montserrat_12, 0);
+    lv_obj_set_style_text_font(metaLbl, &outfit_thin_12, 0);
     lv_obj_set_pos(metaLbl, 8, 76);
 
     // TIMELINE section header
     lv_obj_t* tlHdr = lv_label_create(scr_detail);
     lv_label_set_text(tlHdr, "TIMELINE");
     lv_obj_set_style_text_color(tlHdr, COL_PD_GREEN, 0);
-    lv_obj_set_style_text_font(tlHdr, &lv_font_montserrat_12, 0);
+    lv_obj_set_style_text_font(tlHdr, &outfit_thin_12, 0);
     lv_obj_set_style_text_letter_space(tlHdr, 3, 0);
     lv_obj_set_pos(tlHdr, 8, 100);
 
@@ -1204,7 +1205,7 @@ static void buildIncidentDetail(const pd::Incident& inc) {
     detail_timeline_loading = lv_label_create(detail_timeline_list);
     lv_label_set_text(detail_timeline_loading, "Loading timeline...");
     lv_obj_set_style_text_color(detail_timeline_loading, COL_MUT, 0);
-    lv_obj_set_style_text_font(detail_timeline_loading, &lv_font_montserrat_12, 0);
+    lv_obj_set_style_text_font(detail_timeline_loading, &outfit_thin_12, 0);
 
     // ====== Action bar at bottom: BACK · ACK · RESOLVE ======
     auto makeAction = [&](const char* label, lv_color_t color, int x, int w,
@@ -1222,7 +1223,7 @@ static void buildIncidentDetail(const pd::Incident& inc) {
         }
         lv_obj_t* lbl = lv_label_create(b);
         lv_label_set_text(lbl, label);
-        lv_obj_set_style_text_font(lbl, &lv_font_montserrat_12, 0);
+        lv_obj_set_style_text_font(lbl, &outfit_thin_12, 0);
         lv_obj_set_style_text_color(lbl, enabled ? lv_color_hex(0x062) : COL_MUT, 0);
         lv_obj_set_style_text_letter_space(lbl, 2, 0);
         lv_obj_center(lbl);
@@ -1253,7 +1254,7 @@ static void buildIncidentDetail(const pd::Incident& inc) {
     lv_obj_set_width(detail_toast, SCREEN_WIDTH - 16);
     lv_label_set_text(detail_toast, "");
     lv_obj_set_style_text_color(detail_toast, COL_PD_GREEN, 0);
-    lv_obj_set_style_text_font(detail_toast, &lv_font_montserrat_12, 0);
+    lv_obj_set_style_text_font(detail_toast, &outfit_thin_12, 0);
     lv_obj_set_style_text_align(detail_toast, LV_TEXT_ALIGN_CENTER, 0);
     lv_obj_set_style_bg_color(detail_toast, COL_BG, 0);
     lv_obj_set_style_bg_opa(detail_toast, LV_OPA_COVER, 0);
@@ -1289,7 +1290,7 @@ static void renderTimeline() {
         lv_obj_t* none = lv_label_create(detail_timeline_list);
         lv_label_set_text(none, "(no timeline events)");
         lv_obj_set_style_text_color(none, COL_MUT, 0);
-        lv_obj_set_style_text_font(none, &lv_font_montserrat_12, 0);
+        lv_obj_set_style_text_font(none, &outfit_thin_12, 0);
         return;
     }
 
@@ -1325,7 +1326,7 @@ static void renderTimeline() {
         lv_obj_set_width(lbl, SCREEN_WIDTH - 30);
         lv_label_set_text(lbl, line.c_str());
         lv_obj_set_style_text_color(lbl, COL_INK, 0);
-        lv_obj_set_style_text_font(lbl, &lv_font_montserrat_12, 0);
+        lv_obj_set_style_text_font(lbl, &outfit_thin_12, 0);
         lv_obj_center(lbl);
     }
 }
