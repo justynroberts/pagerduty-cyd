@@ -40,7 +40,11 @@ static String htmlEscape(const String& s) {
 
 static String formPage(const String& msg, bool err) {
     int n = WiFi.scanComplete();
-    if (n == WIFI_SCAN_FAILED || n == -2) WiFi.scanNetworks(true, false);
+    // If never triggered or last attempt failed, kick a fresh scan.
+    if (n == WIFI_SCAN_FAILED || n == -2) {
+        WiFi.scanNetworks(true, false);
+        n = WIFI_SCAN_RUNNING;
+    }
 
     String h;
     h.reserve(4096);
@@ -60,10 +64,12 @@ static String formPage(const String& msg, bool err) {
            "button{appearance:none;border:0;background:linear-gradient(180deg,#00ff41,#00b82e);"
            "color:#062;font-weight:800;padding:12px;border-radius:10px;width:100%;font-size:15px;"
            "letter-spacing:.06em;text-transform:uppercase;cursor:pointer;margin-top:16px}"
+           "button.secondary{background:#1c2622;color:#cfe9d8;font-weight:600;margin-top:10px}"
            ".banner{padding:10px 12px;border-radius:10px;margin-bottom:12px;font-size:13px}"
            ".ok{background:#102b1a;color:#aef0c0;border:1px solid #1f5532}"
            ".err{background:#2a1011;color:#ffb6bb;border:1px solid #5a1d22}"
            ".small{color:#7a8a82;font-size:12px;margin-top:8px}"
+           ".scan-state{color:#7a8a82;font-size:12px;margin:6px 0 0}"
            "</style></head><body><div class=\"w\">"
            "<h1>Connect to WiFi</h1>"
            "<div class=\"sub\">PagerDuty CYD &middot; first-time setup</div>");
@@ -77,7 +83,8 @@ static String formPage(const String& msg, bool err) {
     }
 
     h += F("<form method=\"POST\" action=\"/wifi\" class=\"card\">"
-           "<label>Network</label><select name=\"ssid\" required>");
+           "<label>Network</label><select name=\"ssid\">");
+    h += "<option value=\"\">-- pick a network or type manually below --</option>";
     if (n > 0) {
         for (int i = 0; i < n && i < 25; ++i) {
             String s = WiFi.SSID(i);
@@ -85,24 +92,36 @@ static String formPage(const String& msg, bool err) {
             h += "<option value=\"" + htmlEscape(s) + "\">"
                  + htmlEscape(s) + " (" + String(rssi) + " dBm)</option>";
         }
-    } else {
-        h += "<option value=\"\">(scanning...)</option>";
     }
-    h += F("</select>"
-           "<label>Or type SSID manually</label>"
-           "<input type=\"text\" name=\"ssid_manual\" placeholder=\"Hidden SSID\" autocomplete=\"off\">"
+    h += F("</select>");
+    if (n == WIFI_SCAN_RUNNING) {
+        h += "<p class=\"scan-state\">Scanning networks&hellip; refresh in a few seconds.</p>";
+    } else if (n == 0) {
+        h += "<p class=\"scan-state\">No networks found. Try rescanning, or type your SSID manually.</p>";
+    } else if (n > 0) {
+        h += "<p class=\"scan-state\">" + String(n) + " network" + String(n==1?"":"s") + " found.</p>";
+    }
+    h += F("<label>Or type SSID manually <small>(hidden / not listed)</small></label>"
+           "<input type=\"text\" name=\"ssid_manual\" placeholder=\"My WiFi\" autocomplete=\"off\">"
            "<label>Password</label>"
-           "<input type=\"password\" name=\"pass\" autocomplete=\"new-password\" required>"
+           "<input type=\"password\" name=\"pass\" autocomplete=\"new-password\">"
            "<button type=\"submit\">Save &amp; connect</button>"
            "<div class=\"small\">2.4 GHz networks only. ESP32 doesn't speak 5 GHz or WPA3-only.</div>"
            "</form>"
-           "<div class=\"card small\">If your network isn't listed, refresh the page in a few seconds &mdash; the scan runs continuously.</div>"
+           "<form method=\"POST\" action=\"/rescan\" class=\"card\" style=\"padding:14px 18px\">"
+           "<button type=\"submit\" class=\"secondary\">Rescan networks</button>"
+           "</form>"
            "</div></body></html>");
     return h;
 }
 
 static void handleRoot()  { http.send(200, "text/html", formPage(g_lastError, g_lastError.length() > 0)); g_lastError = ""; }
 static void redirectRoot(){ http.sendHeader("Location", "http://192.168.4.1/"); http.send(302, "text/plain", ""); }
+static void handleRescan(){
+    WiFi.scanDelete();
+    WiFi.scanNetworks(true, false);
+    http.sendHeader("Location", "/"); http.send(302, "text/plain", "");
+}
 
 static void saveCreds(const String& ssid, const String& pass) {
     Preferences p; p.begin("wifi_cfg", false);
@@ -191,12 +210,15 @@ static void portalLoop() {
                   g_apSsid.c_str(), WiFi.softAPIP().toString().c_str());
     if (s_onPortal) s_onPortal(g_apSsid, AP_PASSWORD);
 
-    WiFi.scanNetworks(true, false);    // start async scan
+    // Async scan; passive=false so the radio actively probes. show_hidden=false,
+    // 300ms/channel keeps the AP responsive while still finding most networks.
+    WiFi.scanNetworks(true, false, false, 300);
 
     dns.start(DNS_PORT, "*", WiFi.softAPIP());
 
     http.on("/",                HTTP_GET,  handleRoot);
     http.on("/wifi",            HTTP_POST, handleSave);
+    http.on("/rescan",          HTTP_POST, handleRescan);
     // Captive-portal redirect endpoints used by phones to detect login walls
     http.on("/generate_204",    HTTP_GET,  redirectRoot);
     http.on("/gen_204",         HTTP_GET,  redirectRoot);
@@ -208,9 +230,19 @@ static void portalLoop() {
     http.onNotFound([](){ http.sendHeader("Location", "http://192.168.4.1/"); http.send(302, "text/plain", ""); });
     http.begin();
 
+    uint32_t lastScanKick = millis();
     while (!g_connected) {
         dns.processNextRequest();
         http.handleClient();
+        // Self-heal the scan: if it failed/finished-empty, kick it again every 8s.
+        if (millis() - lastScanKick > 8000) {
+            int n = WiFi.scanComplete();
+            if (n == WIFI_SCAN_FAILED || n == -2 || n == 0) {
+                WiFi.scanDelete();
+                WiFi.scanNetworks(true, false, false, 300);
+            }
+            lastScanKick = millis();
+        }
         delay(2);
     }
 }
