@@ -75,6 +75,18 @@ void setup() {
     }
 
     display::begin();
+
+    // Factory-reset gesture: hold the touchscreen during boot for ~2s to wipe
+    // WiFi creds and PD token, then reboot back into AP setup mode.
+    if (display::factoryResetPrompt(2000)) {
+        Serial.println("[boot] factory reset triggered — wiping creds");
+        storage::clearAll();
+        WiFi.mode(WIFI_STA);
+        WiFi.disconnect(true, true);   // erase saved AP from NVS
+        delay(200);
+        ESP.restart();
+    }
+
     ui::begin();
     ui::showConnecting("Booting...");
     display::tick();

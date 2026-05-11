@@ -74,3 +74,43 @@ void display::tick() { lv_timer_handler(); }
 void display::setBacklight(uint8_t pct) {
     digitalWrite(TFT_BL, pct > 0 ? HIGH : LOW);
 }
+
+bool display::touched() { return ts.touched(); }
+
+bool display::factoryResetPrompt(uint32_t holdMs) {
+    // Sample once — if nothing pressed at boot, bail immediately.
+    if (!ts.touched()) return false;
+
+    tft.fillScreen(TFT_BLACK);
+    tft.setTextDatum(MC_DATUM);
+    tft.setTextColor(TFT_WHITE, TFT_BLACK);
+    tft.setTextSize(2);
+    tft.drawString("FACTORY RESET", SCREEN_WIDTH / 2, 60);
+    tft.setTextSize(1);
+    tft.setTextColor(0xC638, TFT_BLACK);   // muted grey
+    tft.drawString("Keep holding to wipe WiFi + token", SCREEN_WIDTH / 2, 92);
+    tft.drawString("Release to cancel", SCREEN_WIDTH / 2, 108);
+
+    const int barW = 220, barH = 14, barX = (SCREEN_WIDTH - barW) / 2, barY = 150;
+    tft.drawRect(barX, barY, barW, barH, 0x07E0);   // green outline
+    uint32_t start = millis();
+    uint32_t last  = 0;
+    while (millis() - start < holdMs) {
+        if (!ts.touched()) {
+            tft.fillScreen(TFT_BLACK);
+            return false;
+        }
+        uint32_t fillW = ((millis() - start) * (barW - 2)) / holdMs;
+        if (fillW != last) {
+            tft.fillRect(barX + 1, barY + 1, fillW, barH - 2, 0x07E0);
+            last = fillW;
+        }
+        delay(15);
+    }
+    tft.fillRect(barX + 1, barY + 1, barW - 2, barH - 2, 0x07E0);
+    tft.setTextColor(TFT_GREEN, TFT_BLACK);
+    tft.setTextSize(2);
+    tft.drawString("WIPED", SCREEN_WIDTH / 2, 190);
+    delay(700);
+    return true;
+}

@@ -306,8 +306,8 @@ void ui::showSetupHint(const String& ssid, const String& password, const String&
     lv_obj_align(sub, LV_ALIGN_TOP_LEFT, 120, 60);
 
     lv_obj_t* card = lv_obj_create(scr_setup);
-    lv_obj_set_size(card, SCREEN_WIDTH - 32, 96);
-    lv_obj_align(card, LV_ALIGN_BOTTOM_MID, 0, -28);
+    lv_obj_set_size(card, SCREEN_WIDTH - 32, 92);
+    lv_obj_align(card, LV_ALIGN_BOTTOM_MID, 0, -52);
     lv_obj_set_style_bg_color(card, COL_PANEL, 0);
     lv_obj_set_style_border_color(card, COL_PD_GREEN, 0);
     lv_obj_set_style_border_width(card, 2, 0);
